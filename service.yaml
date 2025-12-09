@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: public-web-service
+  # Optional: This annotation forces the use of a Network Load Balancer (NLB)
+  # which is typically faster and cheaper than an ALB for simple TCP traffic.
+  # If omitted, EKS will likely default to an NLB or a Classic LB.
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb" 
+spec:
+  selector:
+    app: web # MUST match the label from your Deployment (Step 1)
+  ports:
+    - protocol: TCP
+      port: 80       # Port the public NLB will listen on (External Access)
+      targetPort: 80 # Port the Pod is actually listening on
+  type: LoadBalancer
